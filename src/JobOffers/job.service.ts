@@ -12,4 +12,13 @@ export class JobService {
     const createJob = new this.JobModel(jobDto);
     return createJob.save();
   }
+
+  async getAllOffers(): Promise<JobDocument[]> {
+    const offers = this.JobModel.find().exec();
+    return offers;
+  }
+
+  async getAllOffersByUser(email: string): Promise<JobDocument[]> {
+    return this.JobModel.find({ createdBy: email }).exec();
+  }
 }
