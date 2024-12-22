@@ -1,4 +1,4 @@
-import { Controller, Param, UseGuards } from '@nestjs/common';
+import { Body, Controller, Param, UseGuards } from '@nestjs/common';
 import { JobService } from './job.service';
 import { JobDto } from './dto/job.dto';
 import { MessagePattern, Payload } from '@nestjs/microservices';
@@ -7,6 +7,7 @@ import { RolesGuard } from '../auth/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import * as jwt from 'jsonwebtoken';
 import { Job } from './schema/job.schema';
+import { ApplyJobDto } from './dto/applyJob.dto';
 
 @Controller('job')
 export class JobController {
@@ -52,5 +53,16 @@ export class JobController {
     const email = decodedToken.email;
 
     return this.jobService.getAllOffersByUser(email);
+  }
+
+  @MessagePattern({ cmd: 'applyForJob' })
+  async applyForJob(
+    @Payload() data: { id: string; candidateId: string; cvUrl: string },
+  ) {
+    const { id, candidateId, cvUrl } = data;
+    return this.jobService.applyForJob(id, {
+      candidateId,
+      cv: cvUrl,
+    });
   }
 }

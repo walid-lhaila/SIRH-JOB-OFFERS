@@ -23,6 +23,17 @@ export class Job extends Document {
 
   @Prop({ required: true })
   createdBy: string;
+
+  @Prop({
+    type: [
+      {
+        _id: { type: String, required: true },
+        cv: { type: String, required: true },
+      },
+    ],
+    default: [],
+  })
+  candidatures: { _id: string; cv: string }[];
 }
 export type JobDocument = Job;
 export const JobSchema = SchemaFactory.createForClass(Job);
